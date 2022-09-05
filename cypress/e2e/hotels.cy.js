@@ -1,4 +1,10 @@
 describe('Cypress', () => {
+  beforeEach(() => {
+    cy.intercept('GET', 'PacktPublishing/React-Projects-Second-Edition/hotels', {fixture: 'hotels.json'});
+    cy.intercept('GET', 'PacktPublishing/React-Projects-Second-Edition/hotels/*', {fixture: 'hotel.json'});
+    cy.intercept('GET', 'PacktPublishing/React-Projects-Second-Edition/hotels/*/reviews', []);
+  })
+
   it('opens the app and clicks on a hotel', () => {
     cy.visit('http://localhost:3000');
 
@@ -18,6 +24,13 @@ describe('Cypress', () => {
       cy.get('input[name=rating]').type(4);
       cy.get('button').click({ multiple: true });
     });
+
+  it('and verifies if the review is added', () => {
+    cy.wait(600);
+
+    cy.get('h3').contains('Test review');
+    cy.get('div').contains('Is a test review by Cypress')
+  })
   });
 })
 
